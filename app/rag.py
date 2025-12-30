@@ -22,7 +22,7 @@ chroma_client = chromadb.PersistentClient(
 collection = chroma_client.get_collection(name="legal_documents")
 
 
-def query_rag(question: str, top_k: int = 3) -> str:
+def query_rag(question: str) -> str:
     """
     Recibe una pregunta del usuario y devuelve
     una respuesta basada únicamente en los documentos.
@@ -42,11 +42,24 @@ def query_rag(question: str, top_k: int = 3) -> str:
     # Busca los chunks más relevantes en la base vectorial
     results = collection.query(
         query_embeddings=[query_embedding],
-        n_results=top_k
+        n_results=10
     )
 
     context_chunks = results["documents"][0]
-    context = "\n\n".join(context_chunks)
+
+    rerank_response = co.rerank(
+        model="rerank-multilingual-v3.0",
+        query=question,
+        documents=context_chunks,
+        top_n=3
+    )
+
+    reranked_chunks = [
+        context_chunks[result.index]
+        for result in rerank_response.results
+    ]
+
+    context = "\n\n".join(reranked_chunks)
 
     prompt = f"""
         SISTEMA:
@@ -54,7 +67,7 @@ def query_rag(question: str, top_k: int = 3) -> str:
 
         REGLAS DE RESPUESTA (OBLIGATORIAS):
         - Respondé UNICAMENTE usando el contexto proporcionado a continuación.
-        - Si la respuesta NO se encuentra en el contexto, la salida DEBE SER EXACTAMENTE: No puedo brindarte esa información.
+        - Buscá que la respuesta sea concisa y directa. Solo agregá información adicional si la pregunta lo requiere para ser clara o correcta.
         - Está TERMINANTEMENTE PROHIBIDO inferir o asumir información.
         - SIEMPRE mantené un tono formal y profesional.
         - No utilizar emojis.
