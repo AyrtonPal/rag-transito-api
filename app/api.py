@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from rag import query_rag
+from app.rag import query_rag
 
 # Creamos la app de FastAPI
 app = FastAPI(

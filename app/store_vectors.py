@@ -73,12 +73,12 @@ def store_vectors():
         metadatas.extend(batch_metadatas)
         ids.extend(batch_ids)
 
-        print(f"✔ Batch generado y guardado: {i + len(batch_chunks)}/{len(chunks)}")
+        print(f"Batch generado y guardado: {i + len(batch_chunks)}/{len(chunks)}")
 
         # Espera para no superar límite de tokens/minuto
         time.sleep(SLEEP_TIME)
 
-    print("✔ Base vectorial creada y persistida")
+    print("Base vectorial creada y persistida")
 
 
 if __name__ == "__main__":
