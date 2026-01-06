@@ -41,7 +41,7 @@ def store_vectors():
     metadatas = []
     ids = []
 
-    print("Generando embeddings con Cohere en batches...")
+    print("Generando embeddings...")
 
     for i in range(0, len(chunks), BATCH_SIZE):
         batch_chunks = chunks[i:i + BATCH_SIZE]

@@ -25,8 +25,7 @@ def pdf_to_text(pdf_path: str) -> str:
         if text:
             full_text.append(text)
 
-    # Se unen todos los textos de las páginas en un solo string,
-    # separándolos con saltos de línea
+    # Se unen todos los textos de las páginas en un solo string
     return "\n".join(full_text)
 
 
@@ -37,10 +36,10 @@ def main():
     en la carpeta OUTPUT_DIR.
     """
 
-    # Se recorren todos los archivos dentro de la carpeta de PDFs
+    # Se recorren todos los archivos
     for file_name in os.listdir(PDF_DIR):
-
-        # Se ignoran los archivos que no tengan extensión .pdf
+        
+        # Se valida que el archivo sea un PDF
         if not file_name.lower().endswith(".pdf"):
             continue
 
@@ -57,8 +56,7 @@ def main():
 
         text = pdf_to_text(pdf_path)
 
-        # Se abre (o crea) el archivo .txt en modo escritura
-        # Si el archivo ya existe, su contenido se sobrescribe
+        # Se abre (o crea) el archivo .txt y se escribe el contenido
         with open(txt_path, "w", encoding="utf-8") as f:
             f.write(text)
 
