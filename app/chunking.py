@@ -7,7 +7,7 @@ OUTPUT_PATH = "data/chunks.json"
 MAX_CHARS = 2500
 
 
-def split_large_text(text: str, max_chars: int):
+def split_large_text(text: str):
     """
     Divide un texto largo en fragmentos más chicos
     cuando supera el tamaño máximo permitido.
@@ -17,7 +17,7 @@ def split_large_text(text: str, max_chars: int):
 
     # Mientras no hayamos recorrido todo el texto
     while start < len(text):
-        end = start + max_chars
+        end = start + MAX_CHARS
         chunks.append(text[start:end])
         start = end
 
@@ -71,7 +71,7 @@ def chunk_text(text: str):
         for chunk in article_chunks:
             # Si el artículo es muy largo, lo subdividimos
             if len(chunk) > MAX_CHARS:
-                final_chunks.extend(split_large_text(chunk, MAX_CHARS))
+                final_chunks.extend(split_large_text(chunk))
             else:
                 final_chunks.append(chunk)
 
@@ -88,7 +88,7 @@ def chunk_text(text: str):
 
     for p in paragraphs:
         if len(p) > MAX_CHARS:
-            final_chunks.extend(split_large_text(p, MAX_CHARS))
+            final_chunks.extend(split_large_text(p))
         else:
             final_chunks.append(p)
 

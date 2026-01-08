@@ -22,7 +22,7 @@ class QuestionResponse(BaseModel):
     source: Source
 
 # Historial semántico: lista de tuplas (embedding, respuesta)
-semantic_history = []
+history = []
 
 # Función para calcular similitud coseno
 def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
@@ -42,22 +42,22 @@ def ask_question(data: QuestionRequest):
     )
     embedding_vector = np.array(embed_question.embeddings.float[0])
 
-    # Buscar en historial semántico
-    for item in semantic_history:
+    # Buscar en historial
+    for item in history:
         similarity = cosine_similarity(embedding_vector, item["embedding"])
         if similarity > 0.85:
             return query_rag_from_known_chunk(
-            chunk_text=item["chunk_text"],
-            source=item["source"],
-            question=data.question
-        )
+                chunk_text=item["chunk_text"],
+                source=item["source"],
+                question=data.question
+            )
 
     # Si no hay coincidencia
     embedding_query = embed_question.embeddings.float[0]
     rag_result = query_rag(embedding_query , data.question)
 
     # Guardamos el embedding y la respuesta
-    semantic_history.append({
+    history.append({
         "embedding": embedding_vector,
         "chunk_text": rag_result["chunk_text"],
         "source": rag_result["source"]

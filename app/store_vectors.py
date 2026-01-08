@@ -10,7 +10,6 @@ load_dotenv()
 co = cohere.Client(os.getenv("COHERE_API_KEY"))
 
 CHUNKS_PATH = "data/chunks.json"
-VECTOR_DB_DIR = "vector_db"
 
 # Inicializamos ChromaDB
 chroma_client = chromadb.PersistentClient(
@@ -37,14 +36,10 @@ def store_vectors():
     """Genera embeddings en batches y los guarda en la base vectorial"""
     chunks = load_chunks()
 
-    texts = []
-    metadatas = []
-    ids = []
-
     print("Generando embeddings...")
 
     for i in range(0, len(chunks), BATCH_SIZE):
-        batch_chunks = chunks[i:i + BATCH_SIZE]
+        batch_chunks = chunks[i: i + BATCH_SIZE]
 
         batch_texts = [chunk["content"] for chunk in batch_chunks]
         batch_metadatas = [{"document": chunk["document"], "chunk_id": chunk["chunk_id"]}
@@ -67,11 +62,6 @@ def store_vectors():
             metadatas=batch_metadatas,
             ids=batch_ids
         )
-
-        # Guardamos en las listas locales
-        texts.extend(batch_texts)
-        metadatas.extend(batch_metadatas)
-        ids.extend(batch_ids)
 
         print(f"Batch generado y guardado: {i + len(batch_chunks)}/{len(chunks)}")
 
