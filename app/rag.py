@@ -15,8 +15,7 @@ chroma_client = chromadb.PersistentClient(
     path="vector_db"
 )
 
-collection = chroma_client.get_collection(name="legal_documents")
-
+collection = chroma_client.get_or_create_collection(name="legal_documents")
 
 # Función única para construir el prompt
 def build_prompt(context: str, question: str) -> str:
