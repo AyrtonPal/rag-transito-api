@@ -7,7 +7,8 @@ __pycache__/
 *.pyc
 
 # Chroma / vectores
-vector_db/
+# Se comento esta linea para poder publicar la API de forma correcta
+# vector_db/
 
 # OS
 .DS_Store
